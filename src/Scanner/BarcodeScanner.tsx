@@ -3,7 +3,10 @@ import QrScanner from "qr-scanner";
 
 const QrScannerComponent = () => {
   const videoRef = useRef(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [results, setResults] = useState<Array<QrScanner.ScanResult> | null>(
+    []
+  );
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -21,7 +24,8 @@ const QrScannerComponent = () => {
             videoElement,
             (result) => {
               console.log(result);
-              alert(`QR Code detected: ${result}`);
+              alert(`QR Code detected: ${result.data}`);
+              setResults((prev) => [...prev, result]);
             },
             {
               onDecodeError: (error) => {
@@ -48,7 +52,16 @@ const QrScannerComponent = () => {
 
   return (
     <div>
-      <h1>QR Scanner Demo</h1>
+      {results && results.length > 0 && (
+        <div>
+          <h2>Results</h2>
+          <ul>
+            {results.map((result, index) => (
+              <li key={index}>{result.data}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <video ref={videoRef} style={{ width: "100%" }}></video>
     </div>
