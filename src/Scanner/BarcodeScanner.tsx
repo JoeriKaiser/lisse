@@ -4,6 +4,7 @@ import { BrowserMultiFormatReader } from "@zxing/library";
 const QrScannerComponent = () => {
   const videoRef = useRef(null);
   const [error, setError] = useState("");
+  const [codes, setCodes] = useState<string[]>([]);
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
@@ -11,7 +12,6 @@ const QrScannerComponent = () => {
 
     const initializeScanner = async () => {
       try {
-        // Request camera permissions
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
         });
@@ -27,7 +27,7 @@ const QrScannerComponent = () => {
             (result, error) => {
               if (result) {
                 console.log(result.getText());
-                alert(`QR Code detected: ${result.getText()}`);
+                setCodes([...codes, result.getText()]);
               }
               if (error) {
                 console.error(error);
@@ -50,12 +50,15 @@ const QrScannerComponent = () => {
     return () => {
       codeReader.reset();
     };
-  }, []);
+  });
 
   return (
     <div>
       <h1>QR Scanner Demo</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      {codes.map((code, index) => (
+        <p key={index}>{code}</p>
+      ))}
       <video ref={videoRef} style={{ width: "100%" }}></video>
     </div>
   );
