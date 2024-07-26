@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/library";
 
 const QrScannerComponent = () => {
@@ -54,12 +54,14 @@ const QrScannerComponent = () => {
 
   return (
     <div>
-      <h1>QR Scanner Demo</h1>
+      <h1>Lisse QR</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {codes.map((code, index) => (
         <p key={index}>{code}</p>
       ))}
-      <video ref={videoRef} style={{ width: "100%" }}></video>
+      <Suspense fallback={<div>Loading...</div>}>
+        <video ref={videoRef} style={{ width: "100%" }}></video>
+      </Suspense>
     </div>
   );
 };
