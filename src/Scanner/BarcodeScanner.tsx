@@ -1,42 +1,41 @@
 import { useEffect, useRef, useState } from "react";
-import QrScanner from "qr-scanner";
+import { BrowserMultiFormatReader } from "@zxing/library";
 
 const QrScannerComponent = () => {
   const videoRef = useRef(null);
-  const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<Array<QrScanner.ScanResult> | null>(
-    []
-  );
+  const [error, setError] = useState("");
+  const [codes, setCodes] = useState<string[]>([]);
 
   useEffect(() => {
-    const videoElement = videoRef.current;
+    const codeReader = new BrowserMultiFormatReader();
+    let selectedDeviceId;
 
     const initializeScanner = async () => {
-      let qrScanner;
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
         });
         stream.getTracks().forEach((track) => track.stop());
 
-        if (videoElement) {
-          qrScanner = new QrScanner(
-            videoElement,
-            (result) => {
-              console.log(result);
-              alert(`QR Code detected: ${result.data}`);
-              setResults((prev) => [...prev, result]);
-            },
-            {
-              onDecodeError: (error) => {
+        const videoInputDevices = await codeReader.listVideoInputDevices();
+        selectedDeviceId = videoInputDevices[1]?.deviceId;
+
+        if (selectedDeviceId) {
+          codeReader.decodeFromVideoDevice(
+            selectedDeviceId,
+            videoRef.current,
+            (result, error) => {
+              if (result) {
+                console.log(result.getText());
+                setCodes([...codes, result.getText()]);
+              }
+              if (error) {
                 console.error(error);
-              },
-              highlightScanRegion: true,
-              highlightCodeOutline: true,
+              }
             }
           );
-
-          qrScanner.start();
+        } else {
+          setError("No video input devices found.");
         }
       } catch (error) {
         console.error("Camera not found or permission denied:", error);
@@ -45,24 +44,21 @@ const QrScannerComponent = () => {
         );
       }
     };
-    if (videoElement) {
-      initializeScanner();
-    }
-  }, []);
+
+    initializeScanner();
+
+    return () => {
+      codeReader.reset();
+    };
+  });
 
   return (
     <div>
-      {results && results.length > 0 && (
-        <div>
-          <h2>Results</h2>
-          <ul>
-            {results.map((result, index) => (
-              <li key={index}>{result.data}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <h1>QR Scanner Demo</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      {codes.map((code, index) => (
+        <p key={index}>{code}</p>
+      ))}
       <video ref={videoRef} style={{ width: "100%" }}></video>
     </div>
   );

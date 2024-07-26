@@ -1,12 +1,10 @@
 import "./App.css";
-import QrScannerComponent from "./Scanner/BarcodeScanner";
+import BarcodeScanner from "./Scanner/BarcodeScanner";
 
 function App() {
   return (
     <>
-      <div>
-        <QrScannerComponent />
-      </div>
+      <BarcodeScanner />
     </>
   );
 }
