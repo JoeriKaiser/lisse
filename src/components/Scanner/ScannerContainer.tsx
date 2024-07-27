@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import BarcodeScanner from './BarcodeScanner';
-import Accrdion from '../components/Accordion/Accordion';
-import Button from '../components/Button/Button';
+import Accordion from '../Accordion/Accordion';
+import Button from '../Button/Button';
 
 const ScannerContainer = () => {
   const [items, setItems] = useState<Array<string>>([]);
@@ -9,7 +9,7 @@ const ScannerContainer = () => {
   return (
     <>
       <BarcodeScanner items={items} setItems={setItems} />
-      <Accrdion items={items} />
+      <Accordion items={items} />
       <Button text="Send" onPress={() => console.log('Send')} />
     </>
   );
