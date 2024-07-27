@@ -1,7 +1,7 @@
 import { Button } from '../ui/button';
 
-const CustomButton = ({ textonPress }: { text: string; onPress: () => void }) => {
-  return <Button>{text}</Button>;
+const CustomButton = ({ text, onPress }: { text: string; onPress: () => void }) => {
+  return <Button onClick={onPress}>{text}</Button>;
 };
 
 export default CustomButton;
