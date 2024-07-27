@@ -1,10 +1,10 @@
 import "./App.css";
-import BarcodeScanner from "./Scanner/BarcodeScanner";
+import ScannerContainer from "./Scanner/ScannerContainer";
 
 function App() {
   return (
     <>
-      <BarcodeScanner />
+      <ScannerContainer />
     </>
   );
 }

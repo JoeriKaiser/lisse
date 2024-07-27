@@ -1,10 +1,15 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { BrowserMultiFormatReader } from "@zxing/library";
+import { useState } from "react";
 
-const QrScannerComponent = () => {
+type Props = {
+  items: string[];
+  setItems: (items: string[]) => void;
+};
+
+const BarcodeScanner = ({ items, setItems }: Props) => {
   const videoRef = useRef(null);
   const [error, setError] = useState("");
-  const [codes, setCodes] = useState<string[]>([]);
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
@@ -27,7 +32,7 @@ const QrScannerComponent = () => {
             (result, error) => {
               if (result) {
                 console.log(result.getText());
-                setCodes([...codes, result.getText()]);
+                setItems([...items, result.getText()]);
               }
               if (error) {
                 console.error(error);
@@ -56,7 +61,7 @@ const QrScannerComponent = () => {
     <div>
       <h1>Lisse QR</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {codes.map((code, index) => (
+      {items.map((code, index) => (
         <p key={index}>{code}</p>
       ))}
       <Suspense fallback={<div>Loading...</div>}>
@@ -66,4 +71,4 @@ const QrScannerComponent = () => {
   );
 };
 
-export default QrScannerComponent;
+export default BarcodeScanner;
