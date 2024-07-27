@@ -1,5 +1,5 @@
-import "./App.css";
-import ScannerContainer from "./Scanner/ScannerContainer";
+import './App.css';
+import ScannerContainer from './Scanner/ScannerContainer';
 
 function App() {
   return (

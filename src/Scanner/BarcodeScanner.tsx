@@ -1,6 +1,6 @@
-import { Suspense, useEffect, useRef } from "react";
-import { BrowserMultiFormatReader } from "@zxing/library";
-import { useState } from "react";
+import { Suspense, useEffect, useRef } from 'react';
+import { BrowserMultiFormatReader } from '@zxing/library';
+import { useState } from 'react';
 
 type Props = {
   items: string[];
@@ -9,7 +9,7 @@ type Props = {
 
 const BarcodeScanner = ({ items, setItems }: Props) => {
   const videoRef = useRef(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
@@ -18,7 +18,7 @@ const BarcodeScanner = ({ items, setItems }: Props) => {
     const initializeScanner = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+          video: true
         });
         stream.getTracks().forEach((track) => track.stop());
 
@@ -26,26 +26,22 @@ const BarcodeScanner = ({ items, setItems }: Props) => {
         selectedDeviceId = videoInputDevices[1]?.deviceId;
 
         if (selectedDeviceId) {
-          codeReader.decodeFromVideoDevice(
-            selectedDeviceId,
-            videoRef.current,
-            (result, error) => {
-              if (result) {
-                console.log(result.getText());
-                setItems([...items, result.getText()]);
-              }
-              if (error) {
-                console.error(error);
-              }
+          codeReader.decodeFromVideoDevice(selectedDeviceId, videoRef.current, (result, error) => {
+            if (result) {
+              console.log(result.getText());
+              setItems([...items, result.getText()]);
             }
-          );
+            if (error) {
+              console.error(error);
+            }
+          });
         } else {
-          setError("No video input devices found.");
+          setError('No video input devices found.');
         }
       } catch (error) {
-        console.error("Camera not found or permission denied:", error);
+        console.error('Camera not found or permission denied:', error);
         setError(
-          "Camera not found or permission denied. Please ensure you have a camera and granted permission."
+          'Camera not found or permission denied. Please ensure you have a camera and granted permission.'
         );
       }
     };
@@ -60,12 +56,12 @@ const BarcodeScanner = ({ items, setItems }: Props) => {
   return (
     <div>
       <h1>Lisse QR</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {items.map((code, index) => (
         <p key={index}>{code}</p>
       ))}
       <Suspense fallback={<div>Loading...</div>}>
-        <video ref={videoRef} style={{ width: "100%" }}></video>
+        <video ref={videoRef} style={{ width: '100%' }}></video>
       </Suspense>
     </div>
   );
