@@ -1,42 +1,39 @@
-import React, { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { FormInputs, IFormInputs } from './formTypes';
 
 type Props = {
-  handleSubmit: (username: string, password: string) => void;
+  onSubmit: (data: IFormInputs) => void;
 };
 
-const Login = ({ handleSubmit }: Props) => {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+const Login = ({ onSubmit }: Props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<IFormInputs>({
+    resolver: yupResolver(FormInputs)
+  });
 
-  const triggerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleSubmit(username, password);
+  const triggerSubmit = (data: IFormInputs) => {
+    onSubmit(data);
   };
 
   return (
     <>
       <h1>Sign in</h1>
-      <form onSubmit={triggerSubmit}>
-        <section>
-          <label htmlFor="username">Username</label>
-          <input
-            onChange={(e) => setUsername(e.target.value)}
-            id="username"
-            name="username"
-            type="text"
-            required
-          />
-        </section>
-        <section>
-          <label htmlFor="current-password">Password</label>
-          <input
-            onChange={(e) => setPassword(e.target.value)}
-            id="current-password"
-            name="password"
-            type="password"
-          />
-        </section>
-        <button type="submit">Sign in</button>
+      <form onSubmit={handleSubmit(triggerSubmit)}>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input id="email" type="email" {...register('email')} />
+          {errors.email && <p>{errors.email.message}</p>}
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input id="password" type="password" {...register('password')} />
+          {errors.password && <p>{errors.password.message}</p>}
+        </div>
+        <button type="submit">Login</button>
       </form>
     </>
   );

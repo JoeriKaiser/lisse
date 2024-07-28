@@ -1,16 +1,16 @@
 import { IFormInputs } from './formTypes';
-import Login from './Login';
+import Register from './Register';
 
-const LoginContainer = () => {
+const RegisterContainer = () => {
   const onSubmit = (inputs: IFormInputs) => {
     console.log(inputs);
   };
 
   return (
     <>
-      <Login onSubmit={onSubmit} />
+      <Register onSubmit={onSubmit} />
     </>
   );
 };
 
-export default LoginContainer;
+export default RegisterContainer;
