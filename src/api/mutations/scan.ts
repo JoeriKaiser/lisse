@@ -2,11 +2,19 @@ import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 
 export type Scan = {
-  name: string;
+  userId: string;
+  barcode: string;
+  productName?: string;
+  productCategory?: string;
+  notes?: string;
 };
 
 type ScanInput = {
-  name: string;
+  userId: string;
+  barcode: string;
+  productName?: string;
+  productCategory?: string;
+  notes?: string;
 };
 
 const api = axios.create({
@@ -25,7 +33,7 @@ export const useCreateScan = () => {
     mutationFn: createScan,
     onSuccess: (newScan) => {
       queryClient.invalidateQueries(['scans']);
-      queryClient.setQueryData(['scan', newScan.name], newScan);
+      queryClient.setQueryData(['scan', newScan.barcode], newScan);
     }
   });
 };
