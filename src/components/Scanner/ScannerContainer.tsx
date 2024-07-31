@@ -3,9 +3,10 @@ import BarcodeScanner from './BarcodeScanner';
 import Accordion from '../Accordion/Accordion';
 import Button from '../Button/Button';
 import { Scan, useCreateScan } from '../../api/mutations/scan';
+import { Result } from '@zxing/library';
 
 const ScannerContainer = () => {
-  const [items, setItems] = useState<Array<string>>(['hello']);
+  const [items, setItems] = useState<Array<Result>>([]);
   const createScan = useCreateScan();
   // TODO temp, change this to dynamic user
   const testScan: Scan = {

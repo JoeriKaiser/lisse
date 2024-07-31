@@ -1,13 +1,13 @@
+import { Result } from '@zxing/library';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
-const CustomAccordion = ({ items }: { items: Array<string> }) => {
+const CustomAccordion = ({ items }: { items: Array<Result> }) => {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
         <AccordionTrigger>Scanned list</AccordionTrigger>
-        <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
         {items.map((item, index) => (
-          <AccordionContent key={index}>{item}</AccordionContent>
+          <AccordionContent key={index}>{JSON.stringify(item)}</AccordionContent>
         ))}
       </AccordionItem>
     </Accordion>
