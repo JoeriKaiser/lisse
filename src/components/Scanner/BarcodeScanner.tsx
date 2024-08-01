@@ -25,24 +25,39 @@ const BarcodeScanner: React.FC<Props> = ({ items, setItems }) => {
 
   useEffect(() => {
     const codeReader = new BrowserMultiFormatReader();
-    let selectedDeviceId: string | undefined;
 
     const initializeScanner = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        stream.getTracks().forEach((track) => track.stop());
-        const videoInputDevices = await codeReader.listVideoInputDevices();
-        selectedDeviceId = videoInputDevices[1]?.deviceId;
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter((device) => device.kind === 'videoinput');
 
-        if (selectedDeviceId && videoRef.current) {
-          await codeReader.decodeFromVideoDevice(selectedDeviceId, videoRef.current, handleResult);
+        const rearCamera = videoDevices.find(
+          (device) =>
+            !(
+              device.label.toLowerCase().includes('front') ||
+              device.label.toLowerCase().includes('facetime')
+            )
+        );
+
+        if (rearCamera && videoRef.current) {
+          await codeReader.decodeFromVideoDevice(
+            rearCamera.deviceId,
+            videoRef.current,
+            handleResult
+          );
+        } else if (videoDevices.length > 0 && videoRef.current) {
+          await codeReader.decodeFromVideoDevice(
+            videoDevices[videoDevices.length - 1].deviceId,
+            videoRef.current,
+            handleResult
+          );
         } else {
-          setError('No video input devices found.');
+          setError('No suitable camera found.');
         }
       } catch (error) {
-        console.error('Camera not found or permission denied:', error);
+        console.error('Camera error:', error);
         setError(
-          'Camera not found or permission denied. Please ensure you have a camera and granted permission.'
+          'Camera not found or permission denied. Please ensure you have granted camera permission.'
         );
       }
     };
@@ -52,7 +67,7 @@ const BarcodeScanner: React.FC<Props> = ({ items, setItems }) => {
     return () => {
       codeReader.reset();
     };
-  }, [handleResult]);
+  }, []);
 
   return (
     <div>
