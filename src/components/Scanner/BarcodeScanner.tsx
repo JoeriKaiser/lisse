@@ -69,11 +69,31 @@ const BarcodeScanner: React.FC<Props> = ({ items, setItems }) => {
     };
   }, []);
 
+  const overlayStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none'
+  };
+
   return (
-    <div>
+    <div style={{ position: 'relative', width: '100%' }}>
       <h1>Lisse Scanner</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <video ref={videoRef} style={{ width: '100%' }} />
+      <svg style={overlayStyle} viewBox={`0 0 100 100`} preserveAspectRatio="xMidYMid slice">
+        <rect
+          x={100 * 0.25}
+          y={100 * 0.4}
+          width={100 * 0.5}
+          height={100 * 0.2}
+          fill="none"
+          stroke="white"
+          strokeWidth="1"
+        />
+      </svg>
     </div>
   );
 };
