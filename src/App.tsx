@@ -1,10 +1,11 @@
 import './App.css';
-import ScannerContainer from './components/Scanner/ScannerContainer';
+import WasmScanner from './components/Scanner/WasmScanner';
 
 function App() {
   return (
     <>
-      <ScannerContainer />
+      {/* <ScannerContainer /> */}
+      <WasmScanner />
     </>
   );
 }
