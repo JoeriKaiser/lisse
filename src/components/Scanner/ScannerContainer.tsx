@@ -19,6 +19,8 @@ const ScannerContainer = () => {
   };
 
   const sendScan = () => {
+    // TODO temp, clear items
+    setItems([]);
     createScan.mutate(testScan, {
       onSuccess: () => {
         console.log('success');
