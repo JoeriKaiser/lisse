@@ -143,22 +143,58 @@ const WasmScanner: React.FC = () => {
     [detect, requestId]
   );
 
+  async function hasTorchCapability(deviceId: string): Promise<boolean> {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: deviceId } }
+      });
+      const track = stream.getVideoTracks()[0];
+
+      if ('ImageCapture' in window) {
+        const imageCapture = new (window as any).ImageCapture(track);
+        const photoCapabilities = await imageCapture.getPhotoCapabilities();
+        return !!photoCapabilities.torch;
+      }
+
+      stream.getTracks().forEach((track) => track.stop());
+      return false;
+    } catch (error) {
+      console.error('Error checking torch capability:', error);
+      return false;
+    }
+  }
+
   const handleVideoButton = async () => {
     if (!requestId) {
       const devices = await navigator.mediaDevices.enumerateDevices();
+
       const videoDevices = devices.filter((device) => device.kind === 'videoinput');
 
-      const backCamera = videoDevices.find(
-        (device) =>
-          device.label.toLowerCase().includes('back') &&
-          !device.label.toLowerCase().includes('wide')
-      );
+      let selectedCamera: MediaDeviceInfo | undefined;
+
+      // Try to find a camera with torch capability
+      for (const device of videoDevices) {
+        if (await hasTorchCapability(device.deviceId)) {
+          selectedCamera = device;
+          break;
+        }
+      }
+
+      // If no camera with torch is found, fallback to previous logic
+      if (!selectedCamera) {
+        selectedCamera = videoDevices.find(
+          (device) =>
+            device.label.toLowerCase().includes('back') &&
+            !device.label.toLowerCase().includes('wide') &&
+            !device.label.toLowerCase().includes('telephoto')
+        );
+      }
 
       const constraints: MediaStreamConstraints = {
         audio: false,
         video: {
-          deviceId: backCamera ? { exact: backCamera.deviceId } : undefined,
-          facingMode: backCamera ? undefined : 'environment',
+          deviceId: selectedCamera ? { exact: selectedCamera.deviceId } : undefined,
+          facingMode: selectedCamera ? undefined : 'environment',
           width: { ideal: 1920 },
           height: { ideal: 1080 }
         }
