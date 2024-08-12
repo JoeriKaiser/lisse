@@ -143,10 +143,29 @@ const WasmScanner: React.FC = () => {
     [detect, requestId]
   );
 
-  const handleVideoButton = () => {
+  const handleVideoButton = async () => {
     if (!requestId) {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+
+      const backCamera = videoDevices.find(
+        (device) =>
+          device.label.toLowerCase().includes('back') &&
+          !device.label.toLowerCase().includes('wide')
+      );
+
+      const constraints: MediaStreamConstraints = {
+        audio: false,
+        video: {
+          deviceId: backCamera ? { exact: backCamera.deviceId } : undefined,
+          facingMode: backCamera ? undefined : 'environment',
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
+      };
+
       navigator.mediaDevices
-        .getUserMedia({ audio: false, video: { facingMode: 'environment' } })
+        .getUserMedia(constraints)
         .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
@@ -175,6 +194,14 @@ const WasmScanner: React.FC = () => {
         <div className="viewport">
           <canvas id="canvas" ref={canvasRef}></canvas>
           <img ref={imgRef} crossOrigin="anonymous" />
+
+          {/* <Webcam
+            ref={webcamRef}
+            audio={false}
+            height={1080}
+            screenshotFormat="image/jpeg"
+            width={1920}
+          /> */}
           <video ref={videoRef} muted autoPlay playsInline></video>
         </div>
         <h5>Result</h5>
