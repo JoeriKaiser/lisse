@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import BarcodeScanner from './BarcodeScanner';
 import Accordion from '../Accordion/Accordion';
 import Button from '../Button/Button';
 import { Scan, useCreateScan } from '../../api/mutations/scan';
@@ -20,6 +19,8 @@ const ScannerContainer = () => {
   };
 
   const sendScan = () => {
+    // TODO temp, clear items
+    setItems([]);
     createScan.mutate(testScan, {
       onSuccess: () => {
         console.log('success');
@@ -32,7 +33,7 @@ const ScannerContainer = () => {
   return (
     <>
       <h5>{`Hi, currently logged in as ${user?.email}`}</h5>
-      <BarcodeScanner items={items} setItems={setItems} />
+      {/* TODO implement barcode scanner */}
       <Accordion items={items} />
       <Button text="Send" onPress={sendScan} />
     </>
