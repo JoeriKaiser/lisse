@@ -6,6 +6,8 @@ import { routeTree } from './routeTree.gen';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AuthProvider } from './context/AuthContext';
 
+import './index.css';
+
 const router = createRouter({ routeTree });
 const queryClient = new QueryClient();
 
