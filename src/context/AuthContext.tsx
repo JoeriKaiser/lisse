@@ -1,4 +1,13 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+  useCallback
+} from 'react';
+import { useNavigate } from '@tanstack/react-router';
+
 import { useLogin, useLogout, getCurrentUser } from '../api/mutations/login';
 
 interface User {
@@ -24,7 +33,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const loadUser = async () => {
       try {
         const userData = await getCurrentUser();
-        setUser({ email: userData.email });
+        if (userData) {
+          setUser({ email: userData.email });
+        }
       } catch (error) {
         // TODO: handle error redirect
         console.log('Failed to load user:', error);
