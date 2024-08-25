@@ -1,37 +1,34 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 
-import { useLogin } from '../../api/mutations/login';
-import { useAuth } from '../../context/AuthContext';
 import { IFormInputs } from './formTypes';
 import Login from './Login';
+import { useLogin } from '../../api/mutations/login';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginContainer = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setUser } = useAuth();
   const loginUser = useLogin();
+  const { setUser } = useAuth();
 
-  const onSubmit = (inputs: IFormInputs) => {
+  const onSubmit = async (inputs: IFormInputs) => {
+    setError(null);
+    setLoading(true);
     try {
-      setError(null);
-      setLoading(true);
-      loginUser.mutate(inputs, {
-        onSuccess: (data) => {
-          setLoading(false);
-          navigate({ to: '/' });
-          if (inputs.rememberMe) {
-            setUser(data);
-          }
-        },
-        onError: () => {
-          setLoading(false);
-          setError('Invalid email or password');
+      await loginUser.mutateAsync(inputs).then(() => {
+        setLoading(false);
+        setUser({ email: inputs.email });
+        if (inputs.rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
         }
+        navigate({ to: '/' });
       });
     } catch (error) {
+      setLoading(false);
       setError('Invalid email or password');
+      console.error('Login error:', error);
     }
   };
 

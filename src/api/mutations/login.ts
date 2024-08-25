@@ -25,7 +25,7 @@ export const useLogin = () => {
 };
 
 const logout = async () => {
-  await api.post('/logout');
+  await api.get('/logout');
 };
 
 export const useLogout = () => {
