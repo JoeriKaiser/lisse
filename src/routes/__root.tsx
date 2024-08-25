@@ -1,26 +1,15 @@
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
+import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import ProtectedRoute from '../features/Protected/ProtectedRoute';
-import '../index.css';
+import { Nav } from '../features/Nav/Nav';
 
 export const Route = createRootRoute({
   component: () => (
     <>
-      <div className="p-2 flex gap-2">
-        <ProtectedRoute>
-          <Link to="/" className="[&.active]:font-bold">
-            Home
-          </Link>
-        </ProtectedRoute>
-        <Link to="/login" className="[&.active]:font-bold">
-          Login
-        </Link>
-        <Link to="/error" className="[&.active]:font-bold">
-          error
-        </Link>
-      </div>
+      <Nav />
       <hr />
-      <Outlet />
+      <div className="container mx-auto p-4">
+        <Outlet />
+      </div>
       <TanStackRouterDevtools />
     </>
   )
