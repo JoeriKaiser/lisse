@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { FormInputs, IFormInputs } from './formTypes';
@@ -20,6 +21,7 @@ const Login: React.FC<Props> = ({ onSubmit, error, loading }) => {
   } = useForm<IFormInputs>({
     resolver: yupResolver(FormInputs)
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const triggerSubmit = (data: IFormInputs) => {
     onSubmit(data);
@@ -57,20 +59,30 @@ const Login: React.FC<Props> = ({ onSubmit, error, loading }) => {
                 </p>
               )}
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
               <input
                 id="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
                   errors.password ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-200 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                } placeholder-gray-500 text-gray-200 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm pr-10`}
                 placeholder="Password"
-                autoComplete="password"
+                autoComplete="current-password"
               />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center z-20"
+                onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? (
+                  <EyeOffIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                ) : (
+                  <EyeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                )}
+              </button>
               {errors.password && (
                 <p className="mt-2 text-sm text-red-600" id="password-error">
                   {errors.password.message}
