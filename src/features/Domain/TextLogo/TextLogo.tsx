@@ -11,14 +11,13 @@ const TextLogo = () => {
       <div style={{ position: 'relative' }}>
         <ScanIcon />
         <span
-          className="title"
+          className="title text-foreground"
           style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             fontWeight: 'bold',
-            color: 'white',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
           }}>
           Lisse

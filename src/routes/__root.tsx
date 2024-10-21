@@ -4,13 +4,14 @@ import { Nav } from '../features/Nav/Nav';
 
 export const Route = createRootRoute({
   component: () => (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Nav />
-      <hr />
-      <div className="container mx-auto p-4">
-        <Outlet />
-      </div>
+      <main className="flex-grow">
+        <div className="container mx-auto p-4">
+          <Outlet />
+        </div>
+      </main>
       <TanStackRouterDevtools />
-    </>
+    </div>
   )
 });

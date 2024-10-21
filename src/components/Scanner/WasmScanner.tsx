@@ -219,8 +219,13 @@ const WasmScanner: React.FC = () => {
 
   return (
     <div className="container">
-      <button onClick={handleVideoButton}>Camera</button>
-      <select value={encoding} onChange={(e) => setEncoding(e.target.value)}>
+      <button className="bg-primary text-primary-foreground" onClick={handleVideoButton}>
+        Camera
+      </button>
+      <select
+        className="bg-primary text-primary-foreground"
+        value={encoding}
+        onChange={(e) => setEncoding(e.target.value)}>
         <option value="utf-8">UTF-8</option>
         <option value="iso-8859-15">ISO-8859-15</option>
         <option value="windows-1252">Windows-1252</option>
