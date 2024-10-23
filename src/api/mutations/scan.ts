@@ -18,7 +18,8 @@ type ScanInput = {
 };
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/scanner`
+  baseURL: `${import.meta.env.VITE_API_URL}/api/scanner`,
+  withCredentials: true
 });
 
 const createScan = async (scan: ScanInput): Promise<Scan> => {

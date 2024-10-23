@@ -3,7 +3,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import { IFormInputs } from '../../features/Register/formTypes';
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/auth`
+  baseURL: `${import.meta.env.VITE_API_URL}/api/auth`,
+  withCredentials: true
 });
 
 const register = async (register: IFormInputs): Promise<IFormInputs> => {
