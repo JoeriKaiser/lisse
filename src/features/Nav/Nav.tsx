@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import ProtectedRoute from '../Protected/ProtectedRoute';
 import GuestRoute from '../Protected/GuestRoute';
 import { useLogout } from '../../api/mutations/login';
@@ -16,11 +16,13 @@ const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) =>
 );
 
 export const Nav = () => {
+  const navigate = useNavigate();
   const logoutUser = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logoutUser.mutate();
+    navigate({ to: '/login' });
   };
 
   const toggleMobileMenu = () => {
