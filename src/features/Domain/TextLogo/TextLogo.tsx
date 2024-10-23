@@ -1,6 +1,6 @@
 import { ScanIcon } from '../ScanIcon/ScanIcon';
 
-const TextLogo = () => {
+const TextLogo = ({ withLogo = true }: { withLogo?: boolean }) => {
   return (
     <div
       style={{
@@ -9,7 +9,7 @@ const TextLogo = () => {
         alignItems: 'center'
       }}>
       <div style={{ position: 'relative' }}>
-        <ScanIcon />
+        {withLogo && <ScanIcon />}
         <span
           className="title text-foreground"
           style={{
