@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 
 export interface IFormInputs {
+  id?: string;
   email: string;
   password: string;
   rememberMe?: boolean;

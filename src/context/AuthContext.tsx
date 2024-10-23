@@ -4,6 +4,7 @@ import { useLogin, useLogout, getCurrentUser } from '../api/mutations/login';
 
 interface User {
   email: string;
+  id?: string;
   // Add other user properties as needed
 }
 
@@ -26,7 +27,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       try {
         const userData = await getCurrentUser();
         if (userData) {
-          setUser({ email: userData.email });
+          setUser({ email: userData.email, id: userData.id });
         }
       } catch (error) {
         console.log('Failed to load user:', error);
@@ -43,7 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       { email, password },
       {
         onSuccess: (data) => {
-          setUser({ email: data.email });
+          setUser({ email: data.email, id: data.id });
         },
         onError: () => {
           console.log('error');
