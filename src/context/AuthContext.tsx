@@ -2,10 +2,9 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 
 import { useLogin, useLogout, getCurrentUser } from '../api/mutations/login';
 
-interface User {
+export interface User {
   email: string;
   id?: string;
-  // Add other user properties as needed
 }
 
 interface AuthContextType {

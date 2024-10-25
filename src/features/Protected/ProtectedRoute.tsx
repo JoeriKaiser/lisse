@@ -1,29 +1,30 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import React from 'react';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import { useAuth } from '../../context/AuthContext';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  // TODO add origin url to redirect to
-  const navigate = useNavigate({ from: '/' });
+  const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const router = useRouter();
 
-  useEffect(() => {
-    console.log(user);
-    if (user) {
-      navigate({ to: '/' });
+  React.useEffect(() => {
+    console.log('FWEFEEF', user, loading);
+    if (!loading && !user) {
+      if (router.state.location.pathname !== '/login') {
+        navigate({ to: '/login', search: { redirect: router.state.location.pathname } });
+      }
     }
-    if (!user) {
-      navigate({ to: '/login' });
-    }
-  }, [user, navigate]);
+  }, [user, loading, navigate, router.state.location.pathname]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
-  if (!user) {
-    return;
+
+  if (user) {
+    return <>{children}</>;
   }
-  return <>{children}</>;
+
+  return null;
 };
 
 export default ProtectedRoute;
