@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { useGetScans } from '../../api/queries/getScans.ts';
 import { Scan } from '../../api/types.ts';
