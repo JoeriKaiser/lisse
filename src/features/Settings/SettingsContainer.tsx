@@ -6,6 +6,9 @@ import { useGetEndpoints } from '../../api/queries/getEndpoints';
 import { useCreateEndpoint, useUpdateEndpoint } from '../../api/mutations/endpoint';
 import { useAuth } from '../../context/AuthContext';
 import { FormInputs } from './formTypes';
+import { Label } from '@radix-ui/react-label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 type FormData = yup.InferType<typeof FormInputs>;
 
@@ -67,56 +70,33 @@ const SettingsContainer: React.FC = () => {
     <div className="max-w-md mx-auto mt-10">
       <h2 className="text-2xl font-bold mb-5">Endpoint Configuration</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block mb-1">
-            Name
-          </label>
-          <input {...register('name')} id="name" className="w-full p-2 border rounded" />
+        <div className="space-y-2">
+          <Label htmlFor="name">Name</Label>
+          <Input {...register('name')} id="name" />
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
 
-        <div>
-          <label htmlFor="url" className="block mb-1">
-            URL
-          </label>
-          <input {...register('url')} id="url" className="w-full p-2 border rounded" />
+        <div className="space-y-2">
+          <Label htmlFor="url">URL</Label>
+          <Input {...register('url')} id="url" />
           {errors.url && <p className="text-red-500 text-sm">{errors.url.message}</p>}
         </div>
 
-        <div>
-          <label htmlFor="authMethod" className="block mb-1">
-            Auth Method
-          </label>
-          <input
-            {...register('authMethod')}
-            id="authMethod"
-            className="w-full p-2 border rounded"
-          />
+        <div className="space-y-2">
+          <Label htmlFor="authMethod">Auth Method</Label>
+          <Input {...register('authMethod')} id="authMethod" />
           {errors.authMethod && <p className="text-red-500 text-sm">{errors.authMethod.message}</p>}
         </div>
 
-        <div>
-          <label htmlFor="authValue" className="block mb-1">
-            Auth Value
-          </label>
-          <input
-            {...register('authValue')}
-            id="authValue"
-            type="password"
-            className="w-full p-2 border rounded"
-          />
+        <div className="space-y-2">
+          <Label htmlFor="authValue">Auth Value</Label>
+          <Input {...register('authValue')} id="authValue" type="password" />
           {errors.authValue && <p className="text-red-500 text-sm">{errors.authValue.message}</p>}
         </div>
 
-        <div>
-          <label htmlFor="customHeaders" className="block mb-1">
-            Custom Headers (JSON)
-          </label>
-          <textarea
-            {...register('customHeaders')}
-            id="customHeaders"
-            className="w-full p-2 border rounded"
-          />
+        <div className="space-y-2">
+          <Label htmlFor="customHeaders">Custom Headers (JSON)</Label>
+          <Textarea {...register('customHeaders')} id="customHeaders" />
           {errors.customHeaders && (
             <p className="text-red-500 text-sm">{errors.customHeaders.message}</p>
           )}

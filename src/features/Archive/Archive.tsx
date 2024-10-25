@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { useGetScans } from '../../api/queries/getScans.ts';
 import { Scan } from '../../api/types.ts';
+import { Input } from '@/components/ui/input.tsx';
 
 const Archive = () => {
   const { user } = useAuth();
@@ -37,12 +38,11 @@ const Archive = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Archive</h1>
       <div className="mb-4">
-        <input
+        <Input
           type="text"
           placeholder="Filter by product name or category"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
-          className="w-full p-2 border rounded"
         />
       </div>
       <div className="mb-4 flex items-center">

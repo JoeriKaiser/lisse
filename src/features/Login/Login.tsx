@@ -4,6 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { FormInputs, IFormInputs } from './formTypes';
 import TextLogo from '../Domain/TextLogo/TextLogo';
+import { Label } from '@radix-ui/react-label';
+import { Input } from '@/components/ui/input';
 
 import '../../index.css';
 
@@ -38,44 +40,39 @@ const Login: React.FC<Props> = ({ onSubmit, error, loading }) => {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(triggerSubmit)}>
           {error && <div className="text-red-600 text-sm mb-4">{error}</div>}
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="sr-only">
                 Email address
-              </label>
-              <input
+              </Label>
+              <Input
                 id="email"
                 type="email"
                 {...register('email')}
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                  errors.email ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-200 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 placeholder="Email address"
                 autoComplete="email"
               />
               {errors.email && (
-                <p className="mt-2 text-sm text-red-600" id="email-error">
+                <p className="text-sm text-red-600" id="email-error">
                   {errors.email.message}
                 </p>
               )}
             </div>
-            <div className="relative">
-              <label htmlFor="password" className="sr-only">
+
+            <div className="space-y-2 relative">
+              <Label htmlFor="password" className="sr-only">
                 Password
-              </label>
-              <input
+              </Label>
+              <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 {...register('password')}
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-                  errors.password ? 'border-red-300' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-200 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm pr-10`}
                 placeholder="Password"
                 autoComplete="current-password"
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center z-20"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? (
                   <EyeOffIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -84,7 +81,7 @@ const Login: React.FC<Props> = ({ onSubmit, error, loading }) => {
                 )}
               </button>
               {errors.password && (
-                <p className="mt-2 text-sm text-red-600" id="password-error">
+                <p className="text-sm text-red-600" id="password-error">
                   {errors.password.message}
                 </p>
               )}
