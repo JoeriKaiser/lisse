@@ -19,7 +19,7 @@ const Login: React.FC<Props> = ({ onSubmit, error, loading }) => {
     handleSubmit,
     formState: { errors }
   } = useForm<IFormInputs>({
-    resolver: yupResolver(FormInputs)
+    resolver: yupResolver<IFormInputs>(FormInputs)
   });
   const [showPassword, setShowPassword] = useState(false);
 
