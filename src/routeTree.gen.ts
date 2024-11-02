@@ -16,12 +16,19 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const SettingsLazyImport = createFileRoute('/settings')()
 const RegisterLazyImport = createFileRoute('/register')()
 const LoginLazyImport = createFileRoute('/login')()
 const ErrorLazyImport = createFileRoute('/error')()
+const ArchiveLazyImport = createFileRoute('/archive')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const SettingsLazyRoute = SettingsLazyImport.update({
+  path: '/settings',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
 
 const RegisterLazyRoute = RegisterLazyImport.update({
   path: '/register',
@@ -38,6 +45,11 @@ const ErrorLazyRoute = ErrorLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/error.lazy').then((d) => d.Route))
 
+const ArchiveLazyRoute = ArchiveLazyImport.update({
+  path: '/archive',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/archive.lazy').then((d) => d.Route))
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -52,6 +64,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/archive': {
+      id: '/archive'
+      path: '/archive'
+      fullPath: '/archive'
+      preLoaderRoute: typeof ArchiveLazyImport
       parentRoute: typeof rootRoute
     }
     '/error': {
@@ -75,6 +94,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterLazyImport
       parentRoute: typeof rootRoute
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -82,9 +108,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
+  ArchiveLazyRoute,
   ErrorLazyRoute,
   LoginLazyRoute,
   RegisterLazyRoute,
+  SettingsLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -96,13 +124,18 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/archive",
         "/error",
         "/login",
-        "/register"
+        "/register",
+        "/settings"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/archive": {
+      "filePath": "archive.lazy.tsx"
     },
     "/error": {
       "filePath": "error.lazy.tsx"
@@ -112,6 +145,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/register": {
       "filePath": "register.lazy.tsx"
+    },
+    "/settings": {
+      "filePath": "settings.lazy.tsx"
     }
   }
 }

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Accordion from '../Accordion/Accordion';
 import Button from '../Button/Button';
-import { Scan, useCreateScan } from '../../api/mutations/scan';
+import { useCreateScan } from '../../api/mutations/scan';
 import { Result } from '@zxing/library';
 import { useAuth } from '../../context/AuthContext';
+import { Scan } from '../../api/types';
 
 const ScannerContainer = () => {
   const { user } = useAuth();

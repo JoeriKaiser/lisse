@@ -1,21 +1,22 @@
 import axios from 'axios';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { IFormInputs } from '../../features/Login/formTypes';
+import { User } from '../../context/AuthContext';
 
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/auth`,
   withCredentials: true
 });
 
-const login = async (login: IFormInputs): Promise<IFormInputs> => {
-  const response = await api.post<IFormInputs>('/login', login);
+const login = async (login: IFormInputs): Promise<User> => {
+  const response = await api.post<User>('/login', login);
   return response.data;
 };
 
-export const useLogin = () => {
+export const useLogin = (): UseMutationResult<User, Error, IFormInputs> => {
   const queryClient = useQueryClient();
 
-  return useMutation<IFormInputs, Error, IFormInputs>({
+  return useMutation<User, Error, IFormInputs>({
     mutationFn: login,
     onSuccess: (newLogin) => {
       queryClient.invalidateQueries(['login']);

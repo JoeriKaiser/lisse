@@ -17,6 +17,7 @@ const WasmScanner: React.FC = () => {
   const imgRef = useRef<HTMLImageElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const [hasVideoFeed, setHasVideoFeed] = useState<boolean>(false);
   const [usingOffscreenCanvas, setUsingOffscreenCanvas] = useState<boolean>(false);
   const [requestId, setRequestId] = useState<number | null>(null);
   const offCanvasRef = useRef<OffscreenCanvas | null>(null);
@@ -206,54 +207,77 @@ const WasmScanner: React.FC = () => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
             detectVideo(true);
+            setHasVideoFeed(true);
           }
         })
         .catch((error) => {
           setResult(JSON.stringify(error));
           setTimingInfo((prev) => ({ ...prev, usingOffscreenCanvas }));
+          setHasVideoFeed(false);
         });
     } else {
       detectVideo(false);
+      setHasVideoFeed(false);
     }
   };
 
   return (
-    <div className="container">
-      <button onClick={handleVideoButton}>Camera</button>
-      <select value={encoding} onChange={(e) => setEncoding(e.target.value)}>
-        <option value="utf-8">UTF-8</option>
-        <option value="iso-8859-15">ISO-8859-15</option>
-        <option value="windows-1252">Windows-1252</option>
-        <option value="macintosh">Macintosh</option>
-      </select>
-      <div className="viewcontainer">
-        <div className="viewport">
-          <canvas id="canvas" ref={canvasRef}></canvas>
-          <img ref={imgRef} crossOrigin="anonymous" />
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+          onClick={handleVideoButton}>
+          Camera
+        </button>
+        <select
+          className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          value={encoding}
+          onChange={(e) => setEncoding(e.target.value)}>
+          <option value="utf-8">UTF-8</option>
+          <option value="iso-8859-15">ISO-8859-15</option>
+          <option value="windows-1252">Windows-1252</option>
+          <option value="macintosh">Macintosh</option>
+        </select>
+      </div>
 
-          {/* <Webcam
-            ref={webcamRef}
-            audio={false}
-            height={1080}
-            screenshotFormat="image/jpeg"
-            width={1920}
-          /> */}
-          <video ref={videoRef} muted autoPlay playsInline></video>
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="relative aspect-video">
+          <canvas id="canvas" ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
+          <img ref={imgRef} crossOrigin="anonymous" className="hidden" />
+          {hasVideoFeed ? (
+            <video
+              ref={videoRef}
+              muted
+              autoPlay
+              playsInline
+              className="w-full h-full object-cover"></video>
+          ) : (
+            <div className="w-full h-full flex flex-col justify-center items-center bg-gray-100 text-gray-700 text-lg text-center p-4">
+              <p>No video feed available</p>
+              <p className="mt-2">Click the Camera button to start</p>
+            </div>
+          )}
         </div>
-        <h5>Result</h5>
-        <div className="result row">
-          <pre className="six columns">{result}</pre>
-          <div className="six columns">
-            <div>
-              {timingInfo.usingOffscreenCanvas.toString()}
-              <br />
-              Time since previous scan: {formatNumber(timingInfo.waitingTime)} ms
-              <br />
-              <code>drawImage()</code>: {formatNumber(timingInfo.drawImageTime)} ms
-              <br />
-              <code>getImageData()</code>: {formatNumber(timingInfo.getImageDataTime)} ms
-              <br />
-              <code>scanImageData()</code>: {formatNumber(timingInfo.scanImageDataTime)} ms
+
+        <div className="p-6">
+          <h5 className="text-xl font-semibold mb-4">Result</h5>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm">{result}</pre>
+            <div className="space-y-2 text-sm">
+              <p>Using Offscreen Canvas: {timingInfo.usingOffscreenCanvas.toString()}</p>
+              <p>Time since previous scan: {formatNumber(timingInfo.waitingTime)} ms</p>
+              <p>
+                <code className="bg-gray-200 px-1 rounded">drawImage()</code>:{' '}
+                {formatNumber(timingInfo.drawImageTime)} ms
+              </p>
+              <p>
+                <code className="bg-gray-200 px-1 rounded">getImageData()</code>:{' '}
+                {formatNumber(timingInfo.getImageDataTime)} ms
+              </p>
+              <p>
+                <code className="bg-gray-200 px-1 rounded">scanImageData()</code>:{' '}
+                {formatNumber(timingInfo.scanImageDataTime)} ms
+              </p>
             </div>
           </div>
         </div>

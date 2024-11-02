@@ -1,13 +1,6 @@
 import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-
-export type Scan = {
-  userId: string;
-  barcode: string;
-  productName?: string;
-  productCategory?: string;
-  notes?: string;
-};
+import { Scan } from '../types.ts';
 
 type ScanInput = {
   userId: string;
@@ -18,7 +11,8 @@ type ScanInput = {
 };
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/scanner`
+  baseURL: `${import.meta.env.VITE_API_URL}/api/scanner`,
+  withCredentials: true
 });
 
 const createScan = async (scan: ScanInput): Promise<Scan> => {
